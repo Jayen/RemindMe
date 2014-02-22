@@ -33,10 +33,31 @@ public class DatabaseActivity extends ListActivity {
 
     public void onClick(View view) {
         ArrayAdapter<Reminder> adapter = (ArrayAdapter<Reminder>) getListAdapter();
-        Reminder reminder = null;
+        Reminder reminder = new Reminder();
+        reminder.setTitle("My Title");
+        reminder.setDescription("My Description");
 
         switch(view.getId()) {
-            
+            case R.id.action_add:
+                String[] reminders = new String[] {reminder.getTitle()};
+                reminder = reminderDataSource.createReminder(reminder.getTitle(), reminder.getDescription());
+                adapter.add(reminder);
+                break;
         }
+        adapter.notifyDataSetChanged();
+    }
+
+    protected void onResume() {
+        try {
+            reminderDataSource.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        super.onResume();
+    }
+
+    protected void onPause() {
+        reminderDataSource.close();
+        super.onPause();
     }
 }

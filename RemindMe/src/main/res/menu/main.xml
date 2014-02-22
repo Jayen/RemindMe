@@ -6,5 +6,6 @@
         android:icon="@drawable/ic_add"
         android:title="@string/action_add"
         android:orderInCategory="100"
+        android:onClick="addReminder"
         android:showAsAction="always"/>
 </menu>

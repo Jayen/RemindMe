@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -41,6 +40,12 @@ public class ReminderDataSource {
         Reminder newReminder = cursorToReminder(cursor);
         cursor.close();
         return newReminder;
+    }
+
+    public void deleteReminder(Reminder reminder) {
+        long id = reminder.getID();
+        System.out.println("Comment deleted with id: " + id);
+        db.delete(ReminderSQLiteHelper.TABLE_REMINDER, ReminderSQLiteHelper.COLUMN_ID + " = " + id, null);
     }
 
     private Reminder cursorToReminder(Cursor cursor) {

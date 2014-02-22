@@ -1,24 +1,54 @@
 package com.app.jayen.remindme;
 
-import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 
-public class MainActivity extends Activity {
+import java.sql.SQLException;
+import java.util.List;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+public class MainActivity extends ListActivity {
+
+    private ReminderDataSource reminderDataSource;
+    public static ArrayAdapter<Reminder> adapter;
+
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ReminderSQLiteHelper reminderSQLiteHelper = new ReminderSQLiteHelper(this.getBaseContext());
-        reminderSQLiteHelper.getWritableDatabase();
+        setContentView(R.layout.activity_main);
 
+        reminderDataSource = new ReminderDataSource(this);
+        try {
+            reminderDataSource.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        List<Reminder> values = reminderDataSource.getAllReminders();
+
+        ArrayAdapter<Reminder> adapter = new ArrayAdapter<Reminder>(this, android.R.layout.simple_list_item_1, values);
+        setListAdapter(adapter);
+    }
+
+    protected void onResume() {
+        try {
+            reminderDataSource.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        super.onResume();
+    }
+
+    protected void onPause() {
+        reminderDataSource.close();
+        super.onPause();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -38,4 +68,16 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void addReminder(MenuItem item) {
+        adapter = (ArrayAdapter<Reminder>) getListAdapter();
+
+        switch(item.getItemId()) {
+            case R.id.action_add:
+                Intent addReminderIntent = new Intent(this,AddReminderActivity.class);
+                startActivity(addReminderIntent);
+                break;
+            //TODO delete functionality 
+        }
+        adapter.notifyDataSetChanged();
+    }
 }
