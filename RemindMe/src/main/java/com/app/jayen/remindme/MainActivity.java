@@ -1,6 +1,7 @@
 package com.app.jayen.remindme;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,9 +11,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
+        ReminderSQLiteHelper reminderSQLiteHelper = new ReminderSQLiteHelper(this.getBaseContext());
+        reminderSQLiteHelper.getWritableDatabase();
 
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -28,7 +30,9 @@ public class MainActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_add) {
+            Intent addReminderIntent = new Intent(this,AddReminderActivity.class);
+            startActivity(addReminderIntent);
             return true;
         }
         return super.onOptionsItemSelected(item);
