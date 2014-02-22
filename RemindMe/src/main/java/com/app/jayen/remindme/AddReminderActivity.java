@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.sql.SQLException;
+
 /**
  * This class was created by Jayen on 22/02/14.
  */
@@ -28,6 +30,17 @@ public class AddReminderActivity extends Activity {
         locationET = (EditText) findViewById(R.id.locationET);
         cancelButton = (Button) findViewById(R.id.cancelButton);
         saveButton = (Button) findViewById(R.id.save);
+        Reminder reminderToLoad = null;
+        try {
+            reminderToLoad = (Reminder) getIntent().getExtras().get("reminder");
+        }
+        catch (NullPointerException e) {
+
+        }
+        if(reminderToLoad!=null) {
+            titleET.setText(reminderToLoad.getTitle());
+            descriptionET.setText(reminderToLoad.getDescription());
+        }
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,10 +53,16 @@ public class AddReminderActivity extends Activity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Reminder reminder = new Reminder();
-                reminder.setTitle(titleET.getText().toString().trim());
-                reminder.setDescription(descriptionET.getText().toString().trim());
-
+                try {
+                    MainActivity.reminderDataSource.open();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                MainActivity.reminderDataSource.createReminder(titleET.getText().toString().trim(),
+                        descriptionET.getText().toString().trim());
+                Intent goBack = new Intent(AddReminderActivity.this,MainActivity.class);
+                MainActivity.reminderDataSource.close();
+                startActivity(goBack);
             }
         });
 

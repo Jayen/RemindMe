@@ -5,20 +5,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 
 public class MainActivity extends ListActivity {
 
-    private ReminderDataSource reminderDataSource;
+    ListView reminderListView;
+    public static ReminderDataSource reminderDataSource;
     public static ArrayAdapter<Reminder> adapter;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        reminderListView = getListView();
         reminderDataSource = new ReminderDataSource(this);
         try {
             reminderDataSource.open();
@@ -26,10 +31,22 @@ public class MainActivity extends ListActivity {
             e.printStackTrace();
         }
 
-        List<Reminder> values = reminderDataSource.getAllReminders();
+        final List<Reminder> values = reminderDataSource.getAllReminders();
 
         ArrayAdapter<Reminder> adapter = new ArrayAdapter<Reminder>(this, android.R.layout.simple_list_item_1, values);
         setListAdapter(adapter);
+
+        reminderListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent viewReminder = new Intent(MainActivity.this,AddReminderActivity.class);
+                Reminder reminder = values.get(position);
+                System.out.println("printing reminder!!! " +reminder);
+                viewReminder.putExtra("reminder",reminder);
+                startActivity(viewReminder);
+            }
+        });
+
     }
 
     protected void onResume() {
@@ -59,12 +76,12 @@ public class MainActivity extends ListActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_add) {
-            Intent addReminderIntent = new Intent(this,AddReminderActivity.class);
-            startActivity(addReminderIntent);
-            return true;
-        }
+//        int id = item.getItemId();
+//        if (id == R.id.action_add) {
+//            Intent addReminderIntent = new Intent(this,AddReminderActivity.class);
+//            startActivity(addReminderIntent);
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -76,7 +93,7 @@ public class MainActivity extends ListActivity {
                 Intent addReminderIntent = new Intent(this,AddReminderActivity.class);
                 startActivity(addReminderIntent);
                 break;
-            //TODO delete functionality 
+            //TODO delete functionality
         }
         adapter.notifyDataSetChanged();
     }
