@@ -15,7 +15,8 @@ import java.util.List;
 public class ReminderDataSource {
     private SQLiteDatabase db;
     private ReminderSQLiteHelper dbHelper;
-    private String[] allColumns = {ReminderSQLiteHelper.COLUMN_ID, ReminderSQLiteHelper.COLUMN_TITLE, ReminderSQLiteHelper.COLUMN_DESCRIPTION, ReminderSQLiteHelper.COLUMN_LOCATION};
+    private String[] allColumns = {ReminderSQLiteHelper.COLUMN_ID, ReminderSQLiteHelper.COLUMN_TITLE, ReminderSQLiteHelper.COLUMN_DESCRIPTION,
+            ReminderSQLiteHelper.COLUMN_LOCATION, ReminderSQLiteHelper.COLUMN_LATITUDE, ReminderSQLiteHelper.COLUMN_LONGITUDE};
 
     public ReminderDataSource(Context context) {
         dbHelper = new ReminderSQLiteHelper(context);
@@ -29,12 +30,14 @@ public class ReminderDataSource {
         dbHelper.close();
     }
 
-    public Reminder createReminder(String title, String description, String location) {
+    public Reminder createReminder(String title, String description, String location, double latitude, double longitude) {
         ContentValues values = new ContentValues();
 
         values.put(ReminderSQLiteHelper.COLUMN_TITLE, title);
         values.put(ReminderSQLiteHelper.COLUMN_DESCRIPTION, description);
         values.put(ReminderSQLiteHelper.COLUMN_LOCATION, location);
+        values.put(ReminderSQLiteHelper.COLUMN_LATITUDE, latitude);
+        values.put(ReminderSQLiteHelper.COLUMN_LONGITUDE, longitude);
         long insertID = db.insert(ReminderSQLiteHelper.TABLE_REMINDER, null, values);
         Cursor cursor = db.query(ReminderSQLiteHelper.TABLE_REMINDER, allColumns, ReminderSQLiteHelper.COLUMN_ID + " = " + insertID, null, null, null, null);
         cursor.moveToFirst();
@@ -43,9 +46,9 @@ public class ReminderDataSource {
         return newReminder;
     }
 
-    public void renameReminder(Reminder reminder, String newTitle, String newDescription, String newLocation) {
+    public void renameReminder(Reminder reminder, String newTitle, String newDescription, String newLocation, double newLatitude, double newLongitude) {
         deleteReminder(reminder);
-        createReminder(newTitle, newDescription, newLocation);
+        createReminder(newTitle, newDescription, newLocation, newLatitude, newLongitude);
     }
 
     public void deleteReminder(Reminder reminder) {
@@ -60,12 +63,13 @@ public class ReminderDataSource {
         reminder.setTitle(cursor.getString(1));
         reminder.setDescription(cursor.getString(2));
         reminder.setLocation(cursor.getString(3));
+        reminder.setLat(cursor.getDouble(4));
+        reminder.setLng(cursor.getDouble(5));
         return reminder;
     }
 
     public List<Reminder> getAllReminders() {
         List<Reminder> reminders = new ArrayList<Reminder>();
-
         Cursor cursor = db.query(ReminderSQLiteHelper.TABLE_REMINDER, allColumns, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {

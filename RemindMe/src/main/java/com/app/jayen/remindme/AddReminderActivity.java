@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -31,6 +33,7 @@ public class AddReminderActivity extends Activity {
     private List<Address> addresses;
     private String locality;
     private String country;
+    LatLng geoCoord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,13 +79,15 @@ public class AddReminderActivity extends Activity {
                 }
                 if(finalReminderToLoad==null) {
                     MainActivity.reminderDataSource.createReminder(titleET.getText().toString().trim(),
-                            descriptionET.getText().toString().trim(), locationET.getText().toString().trim());
+                            descriptionET.getText().toString().trim(),locationET.getText().toString().trim(), geoCoord.latitude, geoCoord.longitude);
 
                 }
                 else {
                     MainActivity.reminderDataSource.renameReminder(finalReminderToLoad, titleET.getText().toString().trim(),
-                            descriptionET.getText().toString().trim(), locationET.getText().toString().trim());
+                            descriptionET.getText().toString().trim(),locationET.getText().toString().trim(), geoCoord.latitude, geoCoord.longitude);
                 }
+
+                
 
                 Intent goBack = new Intent(AddReminderActivity.this,MainActivity.class);
                 goBack.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -104,11 +109,11 @@ public class AddReminderActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==Activity.RESULT_OK) {
-            System.out.println("setting the location text");
+            geoCoord = new LatLng((Double)data.getExtras().get("lat"),(Double)data.getExtras().get("lon"));
             geocoder = new Geocoder(this.getBaseContext(), Locale.getDefault());
             addresses = null;
             try {
-                addresses = geocoder.getFromLocation((Double)data.getExtras().get("lat"),(Double)data.getExtras().get("lon"),1);
+                addresses = geocoder.getFromLocation(geoCoord.latitude,geoCoord.longitude,1);
                 locality = addresses.get(0).getLocality();
                 country = addresses.get(0).getCountryName();
             }

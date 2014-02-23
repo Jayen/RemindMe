@@ -11,6 +11,8 @@ public class Reminder implements Parcelable{
     private String title;
     private String description;
     private String location;
+    private double lat;
+    private double lng;
 
     public Reminder() {
     }
@@ -53,12 +55,14 @@ public class Reminder implements Parcelable{
     }
 
     public Reminder(Parcel in) {
-        String[] data = new String[4];
+        String[] data = new String[6];
         in.readStringArray(data);
         this.id = Long.parseLong(data[0]);
         this.title = data[1];
         this.description =  data[2];
         this.location = data[3];
+        this.lat = Double.parseDouble(data[4]);
+        this.lng = Double.parseDouble(data[5]);
     }
 
     @Override
@@ -68,7 +72,8 @@ public class Reminder implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringArray(new String[]{Long.toString(this.id),this.title,this.description, this.location});
+        dest.writeStringArray(new String[]{Long.toString(this.id),this.title,this.description, this.location,
+                                Double.toString(this.lat),Double.toString(this.lng)});
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -80,4 +85,20 @@ public class Reminder implements Parcelable{
             return new Reminder[size];
         }
     };
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
 }
