@@ -40,7 +40,7 @@ public class DatabaseActivity extends ListActivity {
         switch(view.getId()) {
             case R.id.action_add:
                 String[] reminders = new String[] {reminder.getTitle()};
-                reminder = reminderDataSource.createReminder(reminder.getTitle(), reminder.getDescription());
+                reminder = reminderDataSource.createReminder(reminder.getTitle(), reminder.getDescription(), reminder.getLocation());
                 adapter.add(reminder);
                 break;
         }

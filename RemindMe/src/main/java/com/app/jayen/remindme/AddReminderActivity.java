@@ -44,6 +44,7 @@ public class AddReminderActivity extends Activity {
         if(reminderToLoad!=null) {
             titleET.setText(reminderToLoad.getTitle());
             descriptionET.setText(reminderToLoad.getDescription());
+            locationET.setText(reminderToLoad.getLocation());
         }
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -65,14 +66,12 @@ public class AddReminderActivity extends Activity {
                 }
                 if(finalReminderToLoad==null) {
                     MainActivity.reminderDataSource.createReminder(titleET.getText().toString().trim(),
-                            descriptionET.getText().toString().trim());
+                            descriptionET.getText().toString().trim(), locationET.getText().toString().trim());
 
                 }
                 else {
-
                     MainActivity.reminderDataSource.renameReminder(finalReminderToLoad, titleET.getText().toString().trim(),
-                            descriptionET.getText().toString().trim());
-                    System.out.println("renamed completed");
+                            descriptionET.getText().toString().trim(), locationET.getText().toString().trim());
                 }
 
                 Intent goBack = new Intent(AddReminderActivity.this,MainActivity.class);

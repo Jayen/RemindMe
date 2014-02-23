@@ -10,8 +10,17 @@ public class Reminder implements Parcelable{
     private long id;
     private String title;
     private String description;
+    private String location;
 
     public Reminder() {
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public long getID() {
@@ -44,11 +53,12 @@ public class Reminder implements Parcelable{
     }
 
     public Reminder(Parcel in) {
-        String[] data = new String[3];
+        String[] data = new String[4];
         in.readStringArray(data);
         this.id = Long.parseLong(data[0]);
         this.title = data[1];
         this.description =  data[2];
+        this.location = data[3];
     }
 
     @Override
@@ -58,7 +68,7 @@ public class Reminder implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringArray(new String[]{Long.toString(this.id),this.title,this.description});
+        dest.writeStringArray(new String[]{Long.toString(this.id),this.title,this.description, this.location});
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

@@ -15,7 +15,7 @@ import java.util.List;
 public class ReminderDataSource {
     private SQLiteDatabase db;
     private ReminderSQLiteHelper dbHelper;
-    private String[] allColumns = {ReminderSQLiteHelper.COLUMN_ID, ReminderSQLiteHelper.COLUMN_TITLE, ReminderSQLiteHelper.COLUMN_DESCRIPTION };
+    private String[] allColumns = {ReminderSQLiteHelper.COLUMN_ID, ReminderSQLiteHelper.COLUMN_TITLE, ReminderSQLiteHelper.COLUMN_DESCRIPTION, ReminderSQLiteHelper.COLUMN_LOCATION};
 
     public ReminderDataSource(Context context) {
         dbHelper = new ReminderSQLiteHelper(context);
@@ -29,11 +29,12 @@ public class ReminderDataSource {
         dbHelper.close();
     }
 
-    public Reminder createReminder(String title, String description) {
+    public Reminder createReminder(String title, String description, String location) {
         ContentValues values = new ContentValues();
 
         values.put(ReminderSQLiteHelper.COLUMN_TITLE, title);
         values.put(ReminderSQLiteHelper.COLUMN_DESCRIPTION, description);
+        values.put(ReminderSQLiteHelper.COLUMN_LOCATION, location);
         long insertID = db.insert(ReminderSQLiteHelper.TABLE_REMINDER, null, values);
         Cursor cursor = db.query(ReminderSQLiteHelper.TABLE_REMINDER, allColumns, ReminderSQLiteHelper.COLUMN_ID + " = " + insertID, null, null, null, null);
         cursor.moveToFirst();
@@ -42,9 +43,9 @@ public class ReminderDataSource {
         return newReminder;
     }
 
-    public void renameReminder(Reminder reminder, String newTitle, String newDescription) {
+    public void renameReminder(Reminder reminder, String newTitle, String newDescription, String newLocation) {
         deleteReminder(reminder);
-        createReminder(newTitle, newDescription);
+        createReminder(newTitle, newDescription, newLocation);
     }
 
     public void deleteReminder(Reminder reminder) {
@@ -58,6 +59,7 @@ public class ReminderDataSource {
         reminder.setID(cursor.getLong(0));
         reminder.setTitle(cursor.getString(1));
         reminder.setDescription(cursor.getString(2));
+        reminder.setLocation(cursor.getString(3));
         return reminder;
     }
 
