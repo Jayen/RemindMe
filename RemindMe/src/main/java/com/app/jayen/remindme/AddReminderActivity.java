@@ -81,5 +81,13 @@ public class AddReminderActivity extends Activity {
                 startActivity(goBack);
             }
         });
+
+        locationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent openMap = new Intent(AddReminderActivity.this,MapsActivity.class);
+                startActivityForResult(openMap,1);
+            }
+        });
     }
 }
