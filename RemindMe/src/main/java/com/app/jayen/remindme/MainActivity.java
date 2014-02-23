@@ -1,6 +1,8 @@
 package com.app.jayen.remindme;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -33,7 +35,7 @@ public class MainActivity extends ListActivity {
 
         final List<Reminder> values = reminderDataSource.getAllReminders();
 
-        ArrayAdapter<Reminder> adapter = new ArrayAdapter<Reminder>(this, android.R.layout.simple_list_item_1, values);
+        final ArrayAdapter<Reminder> adapter = new ArrayAdapter<Reminder>(this, android.R.layout.simple_list_item_1, values);
         setListAdapter(adapter);
 
         reminderListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -43,6 +45,37 @@ public class MainActivity extends ListActivity {
                 Reminder reminder = values.get(position);
                 viewReminder.putExtra("reminder",reminder);
                 startActivity(viewReminder);
+            }
+        });
+
+        reminderListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                AlertDialog.Builder alert=new AlertDialog.Builder(MainActivity.this);
+                alert.setMessage("Take action");
+
+                alert.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ArrayAdapter<Reminder> adapter = (ArrayAdapter)reminderListView.getAdapter();
+                        reminderDataSource.deleteReminder(adapter.getItem(position));
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog alertDialog = alert.create();
+                alertDialog.show();
+                return true;
             }
         });
 
