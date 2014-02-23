@@ -61,6 +61,8 @@ public class MainActivity extends ListActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         ArrayAdapter<Reminder> adapter = (ArrayAdapter)reminderListView.getAdapter();
                         reminderDataSource.deleteReminder(adapter.getItem(position));
+                        adapter.remove(adapter.getItem(position));
+                        setListAdapter(adapter);
                         adapter.notifyDataSetChanged();
                     }
                 });
