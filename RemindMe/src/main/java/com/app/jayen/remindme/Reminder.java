@@ -12,7 +12,6 @@ public class Reminder implements Parcelable{
     private String description;
 
     public Reminder() {
-
     }
 
     public long getID() {

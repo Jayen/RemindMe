@@ -41,7 +41,6 @@ public class MainActivity extends ListActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent viewReminder = new Intent(MainActivity.this,AddReminderActivity.class);
                 Reminder reminder = values.get(position);
-                System.out.println("printing reminder!!! " +reminder);
                 viewReminder.putExtra("reminder",reminder);
                 startActivity(viewReminder);
             }

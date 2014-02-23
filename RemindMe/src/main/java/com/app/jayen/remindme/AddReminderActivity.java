@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import java.sql.SQLException;
 
@@ -19,6 +20,7 @@ public class AddReminderActivity extends Activity {
     EditText locationET;
     Button cancelButton;
     Button saveButton;
+    ImageButton locationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,8 @@ public class AddReminderActivity extends Activity {
         locationET = (EditText) findViewById(R.id.locationET);
         cancelButton = (Button) findViewById(R.id.cancelButton);
         saveButton = (Button) findViewById(R.id.save);
+        locationButton = (ImageButton) findViewById(R.id.locationIB);
+
         Reminder reminderToLoad = null;
         try {
             reminderToLoad = (Reminder) getIntent().getExtras().get("reminder");
@@ -65,6 +69,8 @@ public class AddReminderActivity extends Activity {
                 startActivity(goBack);
             }
         });
+
+        
 
 
 
