@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Locale;
 
@@ -78,16 +79,26 @@ public class AddReminderActivity extends Activity {
                     e.printStackTrace();
                 }
                 if(finalReminderToLoad==null) {
-                    MainActivity.reminderDataSource.createReminder(titleET.getText().toString().trim(),
-                            descriptionET.getText().toString().trim(),locationET.getText().toString().trim(), geoCoord.latitude, geoCoord.longitude);
-
+                    if (geoCoord!=null) {
+                        MainActivity.reminderDataSource.createReminder(titleET.getText().toString().trim(),
+                                descriptionET.getText().toString().trim(),locationET.getText().toString().trim(), geoCoord.latitude, geoCoord.longitude);
+                    }
+                    else {
+                        MainActivity.reminderDataSource.createReminder(titleET.getText().toString().trim(),
+                                descriptionET.getText().toString().trim(),locationET.getText().toString().trim(), Double.MIN_VALUE, Double.MIN_VALUE);
+                    }
                 }
                 else {
-                    MainActivity.reminderDataSource.renameReminder(finalReminderToLoad, titleET.getText().toString().trim(),
-                            descriptionET.getText().toString().trim(),locationET.getText().toString().trim(), geoCoord.latitude, geoCoord.longitude);
+                    if (geoCoord!=null) {
+                        MainActivity.reminderDataSource.renameReminder(finalReminderToLoad, titleET.getText().toString().trim(),
+                                descriptionET.getText().toString().trim(),locationET.getText().toString().trim(), geoCoord.latitude, geoCoord.longitude);
+                    }
+                    else {
+                        MainActivity.reminderDataSource.renameReminder(finalReminderToLoad, titleET.getText().toString().trim(),
+                                descriptionET.getText().toString().trim(),locationET.getText().toString().trim(), Double.MIN_VALUE, Double.MIN_VALUE);
+                    }
                 }
 
-                
 
                 Intent goBack = new Intent(AddReminderActivity.this,MainActivity.class);
                 goBack.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
