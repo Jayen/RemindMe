@@ -54,6 +54,7 @@ public class AddReminderActivity extends Activity {
             }
         });
 
+        final Reminder finalReminderToLoad = reminderToLoad;
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,8 +63,18 @@ public class AddReminderActivity extends Activity {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                MainActivity.reminderDataSource.createReminder(titleET.getText().toString().trim(),
-                        descriptionET.getText().toString().trim());
+                if(finalReminderToLoad==null) {
+                    MainActivity.reminderDataSource.createReminder(titleET.getText().toString().trim(),
+                            descriptionET.getText().toString().trim());
+
+                }
+                else {
+
+                    MainActivity.reminderDataSource.renameReminder(finalReminderToLoad, titleET.getText().toString().trim(),
+                            descriptionET.getText().toString().trim());
+                    System.out.println("renamed completed");
+                }
+
                 Intent goBack = new Intent(AddReminderActivity.this,MainActivity.class);
                 goBack.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 MainActivity.reminderDataSource.close();

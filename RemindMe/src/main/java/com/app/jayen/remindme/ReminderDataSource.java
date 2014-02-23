@@ -42,6 +42,11 @@ public class ReminderDataSource {
         return newReminder;
     }
 
+    public void renameReminder(Reminder reminder, String newTitle, String newDescription) {
+        deleteReminder(reminder);
+        createReminder(newTitle, newDescription);
+    }
+
     public void deleteReminder(Reminder reminder) {
         long id = reminder.getID();
         System.out.println("Comment deleted with id: " + id);
