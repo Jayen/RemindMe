@@ -49,8 +49,8 @@ public class AddReminderActivity extends Activity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent goBack = new Intent(AddReminderActivity.this,MainActivity.class);
-                startActivity(goBack);
+                setResult(RESULT_OK, null);
+                finish();
             }
         });
 
@@ -65,14 +65,10 @@ public class AddReminderActivity extends Activity {
                 MainActivity.reminderDataSource.createReminder(titleET.getText().toString().trim(),
                         descriptionET.getText().toString().trim());
                 Intent goBack = new Intent(AddReminderActivity.this,MainActivity.class);
+                goBack.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 MainActivity.reminderDataSource.close();
                 startActivity(goBack);
             }
         });
-
-        
-
-
-
     }
 }
