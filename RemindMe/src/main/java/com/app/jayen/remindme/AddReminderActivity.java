@@ -2,13 +2,19 @@ package com.app.jayen.remindme;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * This class was created by Jayen on 22/02/14.
@@ -21,6 +27,10 @@ public class AddReminderActivity extends Activity {
     Button cancelButton;
     Button saveButton;
     ImageButton locationButton;
+    private Geocoder geocoder;
+    private List<Address> addresses;
+    private String locality;
+    private String country;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,5 +98,26 @@ public class AddReminderActivity extends Activity {
                 startActivityForResult(openMap,1);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==Activity.RESULT_OK) {
+            System.out.println("setting the location text");
+            geocoder = new Geocoder(this.getBaseContext(), Locale.getDefault());
+            addresses = null;
+            try {
+                addresses = geocoder.getFromLocation((Double)data.getExtras().get("lat"),(Double)data.getExtras().get("lon"),1);
+                locality = addresses.get(0).getLocality();
+                country = addresses.get(0).getCountryName();
+            }
+            catch(IndexOutOfBoundsException e) {
+                Log.d("LOCATION ERROR", "IndexOutOfBound in address arraylist");
+            }
+            catch (IOException e) {
+            }
+            locationET.setText(addresses.get(0).getPostalCode());
+        }
     }
 }
